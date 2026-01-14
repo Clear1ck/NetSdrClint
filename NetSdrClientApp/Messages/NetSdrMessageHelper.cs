@@ -113,7 +113,53 @@ namespace NetSdrClientApp.Messages
 
             return success;
         }
+        public static bool TranslateMessageDub(byte[] msg, out MsgTypes type, out ControlItemCodes itemCode, out ushort sequenceNumber, out byte[] body)
+        {
+            itemCode = ControlItemCodes.None;
+            sequenceNumber = 0;
+            bool success = true;
+            var msgEnumarable = msg as IEnumerable<byte>;
+            type = default;
+            itemCode = default;
+            body = null;
 
+            if (msg == null || msg.Length < 4) 
+            {
+                return false;
+            }
+
+            TranslateHeader(msgEnumarable.Take(_msgHeaderLength).ToArray(), out type, out int msgLength);
+            msgEnumarable = msgEnumarable.Skip(_msgHeaderLength);
+            msgLength -= _msgHeaderLength;
+
+            if (type < MsgTypes.DataItem0) // get item code
+            {
+                var value = BitConverter.ToUInt16(msgEnumarable.Take(_msgControlItemLength).ToArray());
+                msgEnumarable = msgEnumarable.Skip(_msgControlItemLength);
+                msgLength -= _msgControlItemLength;
+
+                if (Enum.IsDefined(typeof(ControlItemCodes), (int)value))
+                {
+                    itemCode = (ControlItemCodes)value;
+                }
+                else
+                {
+                    success = false;
+                }
+            }
+            else // get sequenceNumber
+            {
+                sequenceNumber = BitConverter.ToUInt16(msgEnumarable.Take(_msgSequenceNumberLength).ToArray());
+                msgEnumarable = msgEnumarable.Skip(_msgSequenceNumberLength);
+                msgLength -= _msgSequenceNumberLength;
+            }
+
+            body = msgEnumarable.ToArray();
+
+            success &= body.Length == msgLength;
+
+            return success;
+        }
         public static IEnumerable<int> GetSamples(ushort sampleSize, byte[] body)
         {
             sampleSize /= 8; //to bytes
