@@ -70,7 +70,7 @@ namespace NetSdrClientApp.Networking
                 Console.WriteLine("No active connection to disconnect.");
             }
         }
-
+        
         public async Task SendMessageAsync(byte[] data)
         {
             if (Connected && _stream != null && _stream.CanWrite)
