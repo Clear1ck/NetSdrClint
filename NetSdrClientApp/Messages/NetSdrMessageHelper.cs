@@ -72,6 +72,14 @@ namespace NetSdrClientApp.Messages
             sequenceNumber = 0;
             bool success = true;
             var msgEnumarable = msg as IEnumerable<byte>;
+            type = default;
+            itemCode = default;
+            body = null;
+
+            if (msg == null || msg.Length < 4) 
+            {
+                return false;
+            }
 
             TranslateHeader(msgEnumarable.Take(_msgHeaderLength).ToArray(), out type, out int msgLength);
             msgEnumarable = msgEnumarable.Skip(_msgHeaderLength);
@@ -83,7 +91,7 @@ namespace NetSdrClientApp.Messages
                 msgEnumarable = msgEnumarable.Skip(_msgControlItemLength);
                 msgLength -= _msgControlItemLength;
 
-                if (Enum.IsDefined(typeof(ControlItemCodes), value))
+                if (Enum.IsDefined(typeof(ControlItemCodes), (int)value))
                 {
                     itemCode = (ControlItemCodes)value;
                 }
