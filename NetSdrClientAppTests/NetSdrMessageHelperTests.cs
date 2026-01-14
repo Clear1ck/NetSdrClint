@@ -64,6 +64,60 @@ namespace NetSdrClientAppTests
             Assert.That(parametersBytes.Count(), Is.EqualTo(parametersLength));
         }
 
-        //TODO: add more NetSdrMessageHelper tests
+        [Test]
+        public void TranslateMessage_EmptyData_ShouldNotThrow()
+        {
+            // Arrange
+            byte[] data = Array.Empty<byte>();
+
+            // Act & Assert
+            Assert.DoesNotThrow(() => 
+                NetSdrMessageHelper.TranslateMessage(data, out _, out _, out _, out _)
+            );
+        }
+
+        [Test]
+        public void TranslateMessage_TooShortData_ShouldReturnDefault()
+        {
+            // Arrange
+            byte[] data = new byte[] { 0x01, 0x02 };
+
+            // Act
+            NetSdrMessageHelper.TranslateMessage(data, out var type, out _, out _, out _);
+
+            // Assert
+            Assert.That((int)type, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void TranslateMessage_ValidData_ShouldParseType()
+        {
+            // Arrange
+            ushort combined = (ushort)((int)NetSdrMessageHelper.MsgTypes.DataItem1 << 13);
+            byte[] data = BitConverter.GetBytes(combined); 
+            
+            var fullData = data.Concat(new byte[] { 0x00, 0x00 }).ToArray();
+
+            // Act
+            NetSdrMessageHelper.TranslateMessage(fullData, out var actualType, out _, out _, out _);
+
+            // Assert
+            Assert.That(actualType, Is.EqualTo(NetSdrMessageHelper.MsgTypes.DataItem1));
+        }
+
+        [Test]
+        public void TranslateMessage_WithBody_ShouldReturnBodyBytes()
+        {
+            // Arrange
+            byte[] data = new byte[] { 0x00, 0x00, 0x00, 0x00, 0xAA, 0xBB };
+
+            // Act
+            NetSdrMessageHelper.TranslateMessage(data, out _, out _, out _, out byte[] body);
+
+            // Assert
+            Assert.That(body.Length, Is.EqualTo(2));
+            Assert.That(body[0], Is.EqualTo(0xAA));
+            Assert.That(body[1], Is.EqualTo(0xBB));
+        }
     }
 }
