@@ -73,10 +73,20 @@ public class UdpClientWrapper : IUdpClient, IDisposable
             Console.WriteLine($"Error while stopping: {ex.Message}");
         }
     }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            _cts?.Dispose();
+            _tcpClient?.Dispose();
+            _stream?.Dispose(); 
+        }
+    }
+
     public void Dispose()
     {
-        _cts?.Dispose();
-        _udpClient?.Dispose();
+        Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }
 }

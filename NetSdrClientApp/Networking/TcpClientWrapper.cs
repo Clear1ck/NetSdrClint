@@ -136,13 +136,21 @@ namespace NetSdrClientApp.Networking
                 throw new InvalidOperationException("Not connected to a server.");
             }
         }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _cts?.Dispose();
+                _tcpClient?.Dispose();
+                _stream?.Dispose(); 
+            }
+        }
+
         public void Dispose()
         {
-            _cts?.Dispose();
-            
-            _tcpClient?.Dispose();
-            
-            GC.SuppressFinalize(this); 
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }
