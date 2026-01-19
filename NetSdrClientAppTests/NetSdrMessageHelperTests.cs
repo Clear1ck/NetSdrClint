@@ -115,9 +115,12 @@ namespace NetSdrClientAppTests
             NetSdrMessageHelper.TranslateMessage(data, out _, out _, out _, out byte[] body);
 
             // Assert
-            Assert.That(body.Length, Is.EqualTo(2));
-            Assert.That(body[0], Is.EqualTo(0xAA));
-            Assert.That(body[1], Is.EqualTo(0xBB));
+            Assert.Multiple(() =>
+            {
+                Assert.That(body, Has.Length.EqualTo(2));
+                Assert.That(body[0], Is.EqualTo(0xAA));
+                Assert.That(body[1], Is.EqualTo(0xBB));
+            });
         }
     }
 }
