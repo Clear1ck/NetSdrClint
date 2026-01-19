@@ -128,10 +128,10 @@ namespace NetSdrClientAppTests
         public void TranslateMessage_NullInput_ShouldReturnFalse()
         {
             // Act
-            bool result = NetSdrMessageHelper.TranslateMessage(null, out _, out _, out _, out _);
+            bool result = NetSdrMessageHelper.TranslateMessage(null!, out _, out _, out _, out _);
 
             // Assert
-            Assert.IsFalse(result); 
+            Assert.That(result, Is.False); 
 
         }
 
@@ -142,7 +142,7 @@ namespace NetSdrClientAppTests
             bool result = NetSdrMessageHelper.TranslateMessage(Array.Empty<byte>(), out _, out _, out _, out _);
 
             // Assert
-            Assert.IsFalse(result);
+            Assert.That(result, Is.False);
         }
 
         [Test]
@@ -155,7 +155,7 @@ namespace NetSdrClientAppTests
             bool result = NetSdrMessageHelper.TranslateMessage(data, out _, out _, out _, out _);
 
             // Assert
-            Assert.IsFalse(result);
+            Assert.That(result, Is.False);
         }
     }
 }
