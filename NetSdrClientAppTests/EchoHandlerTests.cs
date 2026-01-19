@@ -43,5 +43,25 @@ namespace EchoServerTests
             Assert.DoesNotThrowAsync(async () => 
                 await handler.HandleClientAsync(stream, CancellationToken.None));
         }
+        [Test]
+        public async Task HandleClientAsync_NetworkError_ShouldHandleException()
+        {
+            // Arrange
+            var handler = new EchoHandler();
+            // Використовуємо наш "зламаний" потік
+            using var stream = new BrokenStream(); 
+
+            // Act & Assert
+            Assert.DoesNotThrowAsync(async () => 
+                await handler.HandleClientAsync(stream, CancellationToken.None));
+        }
+
+        private class BrokenStream : MemoryStream
+        {
+            public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+            {
+                throw new IOException("Simulated network failure");
+            }
+        }
     }
 }
