@@ -1,4 +1,6 @@
+using NUnit.Framework;
 using NetSdrClientApp.Messages;
+using System;
 
 namespace NetSdrClientAppTests
 {
@@ -121,6 +123,39 @@ namespace NetSdrClientAppTests
                 Assert.That(body[0], Is.EqualTo(0xAA));
                 Assert.That(body[1], Is.EqualTo(0xBB));
             });
+        }
+        [Test]
+        public void TranslateMessage_NullInput_ShouldReturnFalse()
+        {
+            // Act
+            bool result = NetSdrMessageHelper.TranslateMessage(null, out _, out _, out _, out _);
+
+            // Assert
+            Assert.IsFalse(result); 
+
+        }
+
+        [Test]
+        public void TranslateMessage_EmptyArray_ShouldReturnFalse()
+        {
+            // Act
+            bool result = NetSdrMessageHelper.TranslateMessage(Array.Empty<byte>(), out _, out _, out _, out _);
+
+            // Assert
+            Assert.IsFalse(result);
+        }
+
+        [Test]
+        public void TranslateMessage_TooShortArray_ShouldReturnFalse()
+        {
+            // Arrange
+            byte[] data = new byte[] { 0x01, 0x02, 0x03 }; // Менше 4 байт
+
+            // Act
+            bool result = NetSdrMessageHelper.TranslateMessage(data, out _, out _, out _, out _);
+
+            // Assert
+            Assert.IsFalse(result);
         }
     }
 }
