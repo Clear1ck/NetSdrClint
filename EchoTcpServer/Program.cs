@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Diagnostics.CodeAnalysis;
 
 /// <summary>
 /// This program was designed for test purposes only
@@ -13,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace EchoTcpServer
 {
+    [ExcludeFromCodeCoverage]
     public class EchoServer
     {
         private readonly int _port;
@@ -99,6 +101,7 @@ namespace EchoTcpServer
         }
     }
 
+    [ExcludeFromCodeCoverage]
     public class UdpTimedSender : IDisposable
     {
         private readonly string _host;
