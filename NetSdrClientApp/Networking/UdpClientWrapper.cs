@@ -79,8 +79,7 @@ public class UdpClientWrapper : IUdpClient, IDisposable
         if (disposing)
         {
             _cts?.Dispose();
-            _tcpClient?.Dispose();
-            _stream?.Dispose(); 
+            _udpClient?.Dispose();
         }
     }
 
