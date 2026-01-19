@@ -122,5 +122,37 @@ namespace NetSdrClientAppTests
                 Assert.That(body[1], Is.EqualTo(0xBB));
             });
         }
+        [Fact]
+        public void TranslateMessage_NullInput_ShouldReturnFalse()
+        {
+            // Act
+            bool result = NetSdrMessageHelper.TranslateMessage(null, out _, out _, out _, out _);
+        
+            // Assert
+            Assert.False(result);
+        }
+        
+        [Fact]
+        public void TranslateMessage_EmptyArray_ShouldReturnFalse()
+        {
+            // Act
+            bool result = NetSdrMessageHelper.TranslateMessage(Array.Empty<byte>(), out _, out _, out _, out _);
+        
+            // Assert
+            Assert.False(result);
+        }
+        
+        [Fact]
+        public void TranslateMessage_TooShortArray_ShouldReturnFalse()
+        {
+            // Arrange
+            byte[] data = new byte[] { 0x01, 0x02, 0x03 };
+        
+            // Act
+            bool result = NetSdrMessageHelper.TranslateMessage(data, out _, out _, out _, out _);
+        
+            // Assert
+            Assert.False(result);
+        }
     }
 }
