@@ -115,5 +115,31 @@ public class NetSdrClientTests
         Assert.That(_client.IQStarted, Is.False);
     }
 
-    //TODO: cover the rest of the NetSdrClient code here
+    [Test]
+    public async Task ChangeFrequency_NotConnected_ShouldThrowOrReturn()
+    {
+
+        // Arrange
+        var tcp = new TcpClientWrapper("127.0.0.1", 1234);
+        var udp = new UdpClientWrapper(1234);
+        var client = new NetSdrClient(tcp, udp);
+
+        // Act & Assert
+        Assert.DoesNotThrowAsync(async () => await client.ChangeFrequencyAsync(1000, 1));
+    }
+    [Test]
+    public async Task StopIQ_WhenNotStarted_ShouldDoNothing()
+    {
+
+        // Arrange
+        var tcp = new TcpClientWrapper("127.0.0.1", 1234);
+        var udp = new UdpClientWrapper(1234);
+        var client = new NetSdrClient(tcp, udp);
+
+        // Act
+        await client.StopIQAsync();
+
+        // Assert
+        Assert.IsFalse(client.IQStarted);
+    }
 }

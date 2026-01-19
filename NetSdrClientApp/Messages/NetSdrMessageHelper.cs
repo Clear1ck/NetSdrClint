@@ -74,7 +74,7 @@ namespace NetSdrClientApp.Messages
             var msgEnumarable = msg as IEnumerable<byte>;
             type = default;
             itemCode = default;
-            body = new byte[0];
+            body = Array.Empty<byte>();
 
             if (msg == null || msg.Length < 4) 
             {
