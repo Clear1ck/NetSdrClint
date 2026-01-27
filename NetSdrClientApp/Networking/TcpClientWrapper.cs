@@ -71,7 +71,7 @@ namespace NetSdrClientApp.Networking
             }
             Dispose();
         }
-
+        
         public async Task SendMessageAsync(byte[] data)
         {
             if (Connected && _stream != null && _stream.CanWrite)
